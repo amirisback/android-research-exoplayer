@@ -3,6 +3,7 @@ package com.frogobox.research
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
@@ -21,6 +22,8 @@ class MainActivity : AppCompatActivity() {
         const val TAG = "PlayerActivity"
     }
 
+    private val mainViewModel: MainViewModel by viewModels()
+
     private val viewBinding by lazy(LazyThreadSafetyMode.NONE) {
         ActivityMainBinding.inflate(layoutInflater)
     }
@@ -28,13 +31,23 @@ class MainActivity : AppCompatActivity() {
     private val playbackStateListener: Player.Listener = playbackStateListener()
     private var player: ExoPlayer? = null
 
-    private var playWhenReady = true
-    private var currentItem = 0
-    private var playbackPosition = 0L
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
+
+    }
+
+    private fun setupExoPlayerByViewModel(exoPlayer: ExoPlayer, listener: Player.Listener) {
+        mainViewModel.apply {
+            playWhenReady.observe(this@MainActivity) {
+                exoPlayer.playWhenReady = it
+            }
+            seekExoPlayer.observe(this@MainActivity) {
+                exoPlayer.seekTo(it.currentItem, it.playBackPosition)
+            }
+        }
+        exoPlayer.addListener(listener)
+        exoPlayer.prepare()
     }
 
     public override fun onStart() {
@@ -66,38 +79,44 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun initializePlayerSingle() {
-        player = ExoPlayer.Builder(this)
-            .build()
-            .also { exoPlayer ->
-                viewBinding.videoView.player = exoPlayer
-
-                val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4))
-                exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.playWhenReady = playWhenReady
-                exoPlayer.seekTo(currentItem, playbackPosition)
-                exoPlayer.addListener(playbackStateListener)
-                exoPlayer.prepare()
-            }
-    }
-
     private fun initializePlayer() {
         player = ExoPlayer.Builder(this)
             .build()
             .also { exoPlayer ->
                 viewBinding.videoView.player = exoPlayer
-                val mediaItem = MediaItem.fromUri(getString(R.string.media_url_mp4))
-                exoPlayer.setMediaItem(mediaItem)
-                val secondMediaItem = MediaItem.fromUri(getString(R.string.media_url_mp3))
-                exoPlayer.addMediaItem(secondMediaItem)
-                exoPlayer.playWhenReady = playWhenReady
-                exoPlayer.seekTo(currentItem, playbackPosition)
-                exoPlayer.addListener(playbackStateListener)
-                exoPlayer.prepare()
+
+                // Setup Media
+                exoPlayer.setMediaItem(MediaItem.fromUri(getString(R.string.media_url_mp4)))
+
+                setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
             }
     }
 
-    private fun initializePlayerSingleYoutube() {
+    private fun mediaVideo(): MutableList<String> {
+        val data = mutableListOf<String>()
+        data.add(getString(R.string.media_url_mp4))
+        data.add(getString(R.string.media_url_mp3))
+        return data
+    }
+
+    private fun initializePlayer(uriMedia: List<String>) {
+        player = ExoPlayer.Builder(this)
+            .build()
+            .also { exoPlayer ->
+                viewBinding.videoView.player = exoPlayer
+
+
+                exoPlayer.setMediaItem(MediaItem.fromUri(uriMedia[0]))
+                for (i in uriMedia.indices) {
+                    exoPlayer.addMediaItem(MediaItem.fromUri(uriMedia[i]))
+                }
+
+                // Default setup
+                setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
+            }
+    }
+
+    private fun initializePlayer(uriMedia: String) {
         val trackSelector = DefaultTrackSelector(this).apply {
             setParameters(buildUponParameters().setMaxVideoSizeSd())
         }
@@ -112,18 +131,20 @@ class MainActivity : AppCompatActivity() {
                     .setMimeType(MimeTypes.APPLICATION_MPD)
                     .build()
                 exoPlayer.setMediaItem(mediaItem)
-                exoPlayer.playWhenReady = playWhenReady
-                exoPlayer.seekTo(currentItem, playbackPosition)
-                exoPlayer.addListener(playbackStateListener)
-                exoPlayer.prepare()
+
+                setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
             }
     }
 
     private fun releasePlayer() {
         player?.let { exoPlayer ->
-            playbackPosition = exoPlayer.currentPosition
-            currentItem = exoPlayer.currentMediaItemIndex
-            playWhenReady = exoPlayer.playWhenReady
+            mainViewModel.setSeekExoPlayer(
+                SeekExoPlayer(
+                    exoPlayer.currentMediaItemIndex,
+                    exoPlayer.currentPosition
+                )
+            )
+            mainViewModel.setPlayWhenReady(exoPlayer.playWhenReady)
             exoPlayer.removeListener(playbackStateListener)
             exoPlayer.release()
         }
@@ -140,14 +161,16 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+
     private fun playbackStateListener() = object : Player.Listener {
+
         override fun onPlaybackStateChanged(playbackState: Int) {
             val stateString: String = when (playbackState) {
-                ExoPlayer.STATE_IDLE -> "ExoPlayer.STATE_IDLE      -"
-                ExoPlayer.STATE_BUFFERING -> "ExoPlayer.STATE_BUFFERING -"
-                ExoPlayer.STATE_READY -> "ExoPlayer.STATE_READY     -"
-                ExoPlayer.STATE_ENDED -> "ExoPlayer.STATE_ENDED     -"
-                else -> "UNKNOWN_STATE             -"
+                ExoPlayer.STATE_IDLE -> "ExoPlayer.STATE_IDLE"
+                ExoPlayer.STATE_BUFFERING -> "ExoPlayer.STATE_BUFFERING"
+                ExoPlayer.STATE_READY -> "ExoPlayer.STATE_READY"
+                ExoPlayer.STATE_ENDED -> "ExoPlayer.STATE_ENDED"
+                else -> "UNKNOWN_STATE"
             }
             Log.d(TAG, "changed state to $stateString")
         }
