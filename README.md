@@ -1,6 +1,10 @@
 ## Android Research Tech
 - Template repository for doing research on Android Technologies
 
+## Docs
+- https://www.youtube.com/watch?v=iUGQxGrOs5I&ab_channel=CamboTutorial
+
+
 ## Colaborator
 Very open to anyone, I'll write your name under this, please contribute by sending an email to me
 

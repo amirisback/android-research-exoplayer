@@ -15,6 +15,7 @@ class MainViewModel : ViewModel() {
     private var _playWhenReady = MutableLiveData<Boolean>().apply {
         postValue(true)
     }
+
     var playWhenReady: LiveData<Boolean> = _playWhenReady
 
     fun setPlayWhenReady(playWhenReady: Boolean) {
