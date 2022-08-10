@@ -1,5 +1,6 @@
 package com.frogobox.research.media3
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -8,6 +9,10 @@ import androidx.lifecycle.ViewModel
 
 
 class MainViewModel : ViewModel() {
+
+    companion object {
+        val TAG: String = MainViewModel::class.java.simpleName
+    }
 
     private var _seekExoPlayer = MutableLiveData<SeekExoPlayer>()
     var seekExoPlayer: LiveData<SeekExoPlayer> = _seekExoPlayer
@@ -24,6 +29,8 @@ class MainViewModel : ViewModel() {
 
     fun setSeekExoPlayer(seekExoPlayer: SeekExoPlayer) {
         _seekExoPlayer.postValue(seekExoPlayer)
+        Log.d(TAG, "setSeekExoPlayer - Current Item : $seekExoPlayer")
+        Log.d(TAG, "setSeekExoPlayer - Play Back Position : $seekExoPlayer")
     }
 
 }

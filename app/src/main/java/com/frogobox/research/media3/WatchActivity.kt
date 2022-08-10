@@ -3,6 +3,7 @@ package com.frogobox.research.media3
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
+import android.util.Log
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -14,6 +15,7 @@ import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
 import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.analytics.AnalyticsListener
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.frogobox.research.R
 import com.frogobox.research.databinding.ActivityWatchBinding
@@ -52,6 +54,12 @@ class WatchActivity : AppCompatActivity() {
         }
     }
 
+    private fun mediaVideo(): MutableList<String> {
+        val data = mutableListOf<String>()
+        data.add(getString(R.string.media_url_mp4))
+        data.add(getString(R.string.media_url_mp3))
+        return data
+    }
 
     private fun setupExoPlayerByViewModel(exoPlayer: ExoPlayer, listener: Player.Listener) {
         mainViewModel.apply {
@@ -63,6 +71,15 @@ class WatchActivity : AppCompatActivity() {
             }
         }
         exoPlayer.addListener(listener)
+        exoPlayer.addAnalyticsListener(object : AnalyticsListener {
+            override fun onPlaybackStateChanged(
+                eventTime: AnalyticsListener.EventTime,
+                state: Int
+            ) {
+                super.onPlaybackStateChanged(eventTime, state)
+                Log.d(TAG, "onPlaybackStateChanged: $state")
+            }
+        })
         exoPlayer.prepare()
     }
 
@@ -104,13 +121,6 @@ class WatchActivity : AppCompatActivity() {
                 exoPlayer.setMediaItem(MediaItem.fromUri(getString(R.string.media_url_mp4)))
                 setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
             }
-    }
-
-    private fun mediaVideo(): MutableList<String> {
-        val data = mutableListOf<String>()
-        data.add(getString(R.string.media_url_mp4))
-        data.add(getString(R.string.media_url_mp3))
-        return data
     }
 
     private fun initializePlayer(uriMedia: List<String>) {
@@ -175,6 +185,12 @@ class WatchActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        val position = (player?.currentPosition ?: 0)
+        Log.d(TAG, "Position : $position")
+        super.onDestroy()
+    }
+
 
     private fun playbackStateListener() = object : Player.Listener {
 
@@ -182,19 +198,31 @@ class WatchActivity : AppCompatActivity() {
 
             when (playbackState) {
                 ExoPlayer.STATE_IDLE -> {
-                    "ExoPlayer.STATE_IDLE"
+                    Log.d(TAG, "ExoPlayer.STATE_IDLE")
+                    Log.d(TAG, "Duration : ${player?.duration}")
+                    val position = (player?.currentPosition ?: 0)
+                    Log.d(TAG, "Position : $position")
                 }
                 ExoPlayer.STATE_BUFFERING -> {
-                    "ExoPlayer.STATE_BUFFERING"
+                    Log.d(TAG, "ExoPlayer.STATE_BUFFERING")
+                    Log.d(TAG, "Duration : ${player?.duration}")
+                    val position = (player?.currentPosition ?: 0)
+                    Log.d(TAG, "Position : $position")
                 }
                 ExoPlayer.STATE_READY -> {
-                    "ExoPlayer.STATE_READY"
+                    Log.d(TAG, "ExoPlayer.STATE_READY")
+                    Log.d(TAG, "Duration : ${player?.duration}")
+                    val position = (player?.currentPosition ?: 0)
+                    Log.d(TAG, "Position : $position")
                 }
                 ExoPlayer.STATE_ENDED -> {
-                    "ExoPlayer.STATE_ENDED"
+                    Log.d(TAG, "ExoPlayer.STATE_ENDED")
+                    Log.d(TAG, "Duration : ${player?.duration}")
+                    val position = (player?.currentPosition ?: 0)
+                    Log.d(TAG, "Position : $position")
                 }
                 else -> {
-
+                    Log.d(TAG, "Unknown state")
                 }
 
             }
