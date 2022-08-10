@@ -1,14 +1,11 @@
-package com.frogobox.research
+package com.frogobox.research.media3
 
 import android.annotation.SuppressLint
 import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.widget.ImageView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
@@ -18,7 +15,7 @@ import androidx.media3.common.Player
 import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
-import androidx.media3.ui.PlayerView
+import com.frogobox.research.R
 import com.frogobox.research.databinding.ActivityWatchBinding
 
 class WatchActivity : AppCompatActivity() {
@@ -26,6 +23,8 @@ class WatchActivity : AppCompatActivity() {
     companion object {
         val TAG = WatchActivity::class.java.simpleName
     }
+
+    private var isFullScreen = false
 
     private val mainViewModel: MainViewModel by viewModels()
 
@@ -39,6 +38,18 @@ class WatchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        val fullscreenButton = binding.videoView.findViewById<ImageView>(R.id.exo_fullscreen_icon)
+        fullscreenButton.setOnClickListener {
+            if (isFullScreen) {
+                supportActionBar?.show()
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                isFullScreen = false
+            } else {
+                supportActionBar?.hide()
+                requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+                isFullScreen = true
+            }
+        }
     }
 
 
@@ -89,11 +100,8 @@ class WatchActivity : AppCompatActivity() {
             .build()
             .also { exoPlayer ->
                 binding.videoView.player = exoPlayer
-                binding.
-
                 // Setup Media
                 exoPlayer.setMediaItem(MediaItem.fromUri(getString(R.string.media_url_mp4)))
-                exoPlayer.preparePlayer(binding.videoView, binding.videoViewFullscreen)
                 setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
             }
     }
@@ -171,78 +179,26 @@ class WatchActivity : AppCompatActivity() {
     private fun playbackStateListener() = object : Player.Listener {
 
         override fun onPlaybackStateChanged(playbackState: Int) {
-            val stateString: String = when (playbackState) {
-                ExoPlayer.STATE_IDLE -> "ExoPlayer.STATE_IDLE"
-                ExoPlayer.STATE_BUFFERING -> "ExoPlayer.STATE_BUFFERING"
-                ExoPlayer.STATE_READY -> "ExoPlayer.STATE_READY"
-                ExoPlayer.STATE_ENDED -> "ExoPlayer.STATE_ENDED"
-                else -> "UNKNOWN_STATE"
+
+            when (playbackState) {
+                ExoPlayer.STATE_IDLE -> {
+                    "ExoPlayer.STATE_IDLE"
+                }
+                ExoPlayer.STATE_BUFFERING -> {
+                    "ExoPlayer.STATE_BUFFERING"
+                }
+                ExoPlayer.STATE_READY -> {
+                    "ExoPlayer.STATE_READY"
+                }
+                ExoPlayer.STATE_ENDED -> {
+                    "ExoPlayer.STATE_ENDED"
+                }
+                else -> {
+
+                }
+
             }
-            Log.d(TAG, "changed state to $stateString")
-        }
 
-
-    }
-
-
-}
-
-fun ExoPlayer.preparePlayer(
-    playerView: PlayerView,
-    playerViewFullscreen: PlayerView
-) {
-    (playerView.context as AppCompatActivity).apply {
-        val fullScreenButton: ImageView = playerView.findViewById(R.id.exo_fullscreen_icon)
-        fullScreenButton.setImageDrawable(
-            ContextCompat.getDrawable(this, R.drawable.ic_baseline_fullscreen)
-        )
-
-        fullScreenButton.setOnClickListener {
-            window.decorView.systemUiVisibility =
-                (View.SYSTEM_UI_FLAG_FULLSCREEN or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION)
-            supportActionBar?.hide()
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
-            playerView.visibility = View.GONE
-            playerViewFullscreen.visibility = View.VISIBLE
-            playerView.resizeMode = androidx.media3.ui.AspectRatioFrameLayout.RESIZE_MODE_FIXED_HEIGHT
-            playerView.player?.let { it1 ->
-                PlayerView.switchTargetView(
-                    it1,
-                    playerView,
-                    playerViewFullscreen
-                )
-            }
-        }
-    }
-
-    (playerViewFullscreen.context as AppCompatActivity).apply {
-
-        val normalScreenButton: ImageView =
-            playerViewFullscreen.findViewById(R.id.exo_fullscreen_icon)
-
-        normalScreenButton.setImageDrawable(
-            ContextCompat.getDrawable(this, R.drawable.ic_baseline_fullscreen_exit)
-        )
-
-        normalScreenButton.setOnClickListener {
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_VISIBLE
-            supportActionBar?.show()
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-            normalScreenButton.setImageDrawable(
-                ContextCompat.getDrawable(
-                    this,
-                    R.drawable.ic_baseline_fullscreen_exit
-                )
-            )
-            playerView.visibility = View.VISIBLE
-            playerViewFullscreen.visibility = View.GONE
-            playerView.player?.let { it1 ->
-                PlayerView.switchTargetView(
-                    it1,
-                    playerViewFullscreen,
-                    playerView
-                )
-            }
         }
 
     }

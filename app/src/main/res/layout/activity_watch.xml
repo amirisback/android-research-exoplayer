@@ -9,15 +9,7 @@
         android:id="@+id/video_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:controller_layout_id="@layout/tes_controller"
-        app:use_controller="true" />
-
-    <androidx.media3.ui.PlayerView
-        android:id="@+id/video_view_fullscreen"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:controller_layout_id="@layout/tes_controller"
+        app:controller_layout_id="@layout/custom_player_view_controller"
         app:use_controller="true" />
 
 </FrameLayout>

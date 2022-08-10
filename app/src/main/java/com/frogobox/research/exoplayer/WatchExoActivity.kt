@@ -1,4 +1,4 @@
-package com.frogobox.research
+package com.frogobox.research.exoplayer
 
 import android.net.Uri
 import android.os.Bundle

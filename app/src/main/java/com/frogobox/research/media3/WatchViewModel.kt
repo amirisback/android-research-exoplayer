@@ -1,10 +1,10 @@
-package com.frogobox.research
+package com.frogobox.research.media3
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-// Created by KoinWorks (M. Faisal Amir) on 09/08/22.
+// Created by (M. Faisal Amir) on 09/08/22.
 
 
 class MainViewModel : ViewModel() {

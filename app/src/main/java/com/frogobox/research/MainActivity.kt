@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.frogobox.research.databinding.ActivityMainBinding
+import com.frogobox.research.media3.WatchActivity
 
 class MainActivity : AppCompatActivity() {
 
