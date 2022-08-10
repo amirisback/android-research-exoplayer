@@ -10,15 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
-import androidx.media3.common.MediaItem
-import androidx.media3.common.MimeTypes
 import androidx.media3.common.Player
 import androidx.media3.common.util.Util
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
-import androidx.media3.exoplayer.trackselection.DefaultTrackSelector
 import com.frogobox.research.R
 import com.frogobox.research.databinding.ActivityWatchBinding
+import com.frogobox.research.setMediaItemExtYT
 
 class WatchActivity : AppCompatActivity() {
 
@@ -46,10 +44,12 @@ class WatchActivity : AppCompatActivity() {
                 supportActionBar?.show()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
                 isFullScreen = false
+                fullscreenButton.setImageResource(R.drawable.ic_baseline_fullscreen)
             } else {
                 supportActionBar?.hide()
                 requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
                 isFullScreen = true
+                fullscreenButton.setImageResource(R.drawable.ic_baseline_fullscreen_exit)
             }
         }
     }
@@ -117,45 +117,17 @@ class WatchActivity : AppCompatActivity() {
             .build()
             .also { exoPlayer ->
                 binding.videoView.player = exoPlayer
-                // Setup Media
-                exoPlayer.setMediaItem(MediaItem.fromUri(getString(R.string.media_url_mp4)))
-                setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
-            }
-    }
 
-    private fun initializePlayer(uriMedia: List<String>) {
-        player = ExoPlayer.Builder(this)
-            .build()
-            .also { exoPlayer ->
-                binding.videoView.player = exoPlayer
+                // Setup Media Single Video
+                // exoPlayer.setMediaItemExt(getString(R.string.media_url_mp4))
 
+                // Setup Media Multiple Video
+                // exoPlayer.setMediaItemExt(mediaVideo())
 
-                exoPlayer.setMediaItem(MediaItem.fromUri(uriMedia[0]))
-                for (i in uriMedia.indices) {
-                    exoPlayer.addMediaItem(MediaItem.fromUri(uriMedia[i]))
-                }
+                // Setup Media Single Video Youtube Url
+                exoPlayer.setMediaItemExtYT(getString(R.string.media_url_dash))
 
                 // Default setup
-                setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
-            }
-    }
-
-    private fun initializePlayer(uriMedia: String) {
-        val trackSelector = DefaultTrackSelector(this).apply {
-            setParameters(buildUponParameters().setMaxVideoSizeSd())
-        }
-        player = ExoPlayer.Builder(this)
-            .setTrackSelector(trackSelector)
-            .build()
-            .also { exoPlayer ->
-                binding.videoView.player = exoPlayer
-
-                val mediaItem = MediaItem.Builder()
-                    .setUri(getString(R.string.media_url_dash))
-                    .setMimeType(MimeTypes.APPLICATION_MPD)
-                    .build()
-                exoPlayer.setMediaItem(mediaItem)
-
                 setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
             }
     }
