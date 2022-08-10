@@ -16,7 +16,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import com.frogobox.research.R
 import com.frogobox.research.databinding.ActivityWatchBinding
-import com.frogobox.research.setMediaItemExtYT
+import com.frogobox.research.setMediaItemsExt
 
 class WatchActivity : AppCompatActivity() {
 
@@ -58,6 +58,9 @@ class WatchActivity : AppCompatActivity() {
         val data = mutableListOf<String>()
         data.add(getString(R.string.media_url_mp4))
         data.add(getString(R.string.media_url_mp3))
+        data.add(getString(R.string.media_url_mp4_from_youtube_1))
+        data.add(getString(R.string.media_url_mp4_from_youtube_2))
+        data.add(getString(R.string.media_url_mp4_from_youtube_3))
         return data
     }
 
@@ -122,10 +125,10 @@ class WatchActivity : AppCompatActivity() {
                 // exoPlayer.setMediaItemExt(getString(R.string.media_url_mp4))
 
                 // Setup Media Multiple Video
-                // exoPlayer.setMediaItemExt(mediaVideo())
+                exoPlayer.setMediaItemsExt(mediaVideo(), 3)
 
                 // Setup Media Single Video Youtube Url
-                exoPlayer.setMediaItemExtYT(getString(R.string.media_url_dash))
+                // exoPlayer.setMediaItemExtYT(getString(R.string.media_url_dash))
 
                 // Default setup
                 setupExoPlayerByViewModel(exoPlayer, playbackStateListener)
@@ -157,12 +160,11 @@ class WatchActivity : AppCompatActivity() {
         }
     }
 
-    override fun onDestroy() {
+    override fun onBackPressed() {
         val position = (player?.currentPosition ?: 0)
         Log.d(TAG, "Position : $position")
-        super.onDestroy()
+        super.onBackPressed()
     }
-
 
     private fun playbackStateListener() = object : Player.Listener {
 

@@ -21,12 +21,29 @@ fun ExoPlayer.setMediaItemExt(uriMedia: String) {
     setMediaItem(mediaItem)
 }
 
-fun ExoPlayer.setMediaItemExt(uriMedia: List<String>) {
-    val mediaItemFirst = MediaItem.fromUri(uriMedia[0])
-    setMediaItem(mediaItemFirst)
-    for (i in uriMedia.indices) {
-        Log.d("MediaItem", "MediaItem $i : ${uriMedia[i]}")
-        val mediaItem = MediaItem.fromUri(uriMedia[i + 1])
-        addMediaItem(mediaItem)
+fun ExoPlayer.setMediaItemsExt(uriMedia: List<String>) {
+    val mediaItems = mutableListOf<MediaItem>()
+    uriMedia.forEach {
+        mediaItems.add(MediaItem.fromUri(it))
     }
+    setMediaItems(mediaItems)
+
+}
+
+fun ExoPlayer.setMediaItemsExt(uriMedia: List<String>, position: Int) {
+    Log.d("ExoPlayer", "uri Media Size: ${uriMedia.size}")
+    Log.d("ExoPlayer", "uri Media Position: $position")
+    Log.d("ExoPlayer", "uri Media: ${uriMedia[position]}")
+
+
+    // Initiate MediaItems
+    val mediaItems = mutableListOf<MediaItem>()
+    uriMedia.forEach {
+        mediaItems.add(MediaItem.fromUri(it))
+    }
+
+    setMediaItems(mediaItems, position, 0L)
+
+    Log.d("ExoPlayer", "MediaItem: $mediaItemCount")
+
 }
