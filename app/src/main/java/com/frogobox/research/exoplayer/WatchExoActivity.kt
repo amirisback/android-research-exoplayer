@@ -38,4 +38,5 @@ class WatchExoActivity : AppCompatActivity() {
         simpleExoPlayer.prepare()
         simpleExoPlayer.play()
     }
+
 }

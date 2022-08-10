@@ -16,7 +16,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import com.frogobox.research.R
 import com.frogobox.research.databinding.ActivityWatchBinding
-import com.frogobox.research.setMediaItemsExt
+import com.frogobox.research.util.setMediaItemsExt
 
 class WatchActivity : AppCompatActivity() {
 

@@ -1,12 +1,19 @@
-package com.frogobox.research
+package com.frogobox.research.util
 
 import android.util.Log
 import androidx.media3.common.MediaItem
 import androidx.media3.common.MimeTypes
 import androidx.media3.exoplayer.ExoPlayer
 
-// Created by KoinWorks (M. Faisal Amir) on 10/08/22.
-
+/**
+ * Created by Faisal Amir on 10/08/22
+ * -----------------------------------------
+ * E-mail   : faisalamircs@gmail.com
+ * Github   : github.com/amirisback
+ * -----------------------------------------
+ * Copyright (C) Frogobox ID / amirisback
+ * All rights reserved
+ */
 
 fun ExoPlayer.setMediaItemExtYT(urlYoutube: String) {
     val mediaItem = MediaItem.Builder()
