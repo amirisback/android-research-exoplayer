@@ -56,6 +56,7 @@ class WatchActivity : AppCompatActivity() {
 
     private fun mediaVideo(): MutableList<String> {
         val data = mutableListOf<String>()
+        data.add(getString(R.string.media_url_jwp))
         data.add(getString(R.string.media_url_mp4))
         data.add(getString(R.string.media_url_mp3))
         data.add(getString(R.string.media_url_mp4_from_youtube_1))
@@ -125,7 +126,7 @@ class WatchActivity : AppCompatActivity() {
                 // exoPlayer.setMediaItemExt(getString(R.string.media_url_mp4))
 
                 // Setup Media Multiple Video
-                exoPlayer.setMediaItemsExt(mediaVideo(), 3)
+                exoPlayer.setMediaItemsExt(mediaVideo())
 
                 // Setup Media Single Video Youtube Url
                 // exoPlayer.setMediaItemExtYT(getString(R.string.media_url_dash))

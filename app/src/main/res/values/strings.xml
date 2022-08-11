@@ -7,6 +7,8 @@
     <string name="media_url_mp4_from_youtube_2">https://armorycodes.github.io/android-exoplayer/docs/video/video2.mp4</string>
     <string name="media_url_mp4_from_youtube_3">https://armorycodes.github.io/android-exoplayer/docs/video/video3.mp4</string>
 
+    <string name="media_url_jwp">https://videos-fms.jwpsrv.com/0_62f3aeee_0xf7006b18d94a1142284e5481453c37a44a5d7d14/content/conversions/9bENubtS/videos/Wjj4qRkn-34267203.mp4</string>
+
     <!-- Big Buck Bunny video provided by the Blender Foundation.
     (c) copyright 2008, Blender Foundation / www.bigbuckbunny.org -->
     <string name="media_url_mp4">https://storage.googleapis.com/exoplayer-test-media-0/BigBuckBunny_320x180.mp4</string>
