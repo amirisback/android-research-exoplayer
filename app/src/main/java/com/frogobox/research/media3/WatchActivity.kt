@@ -16,6 +16,7 @@ import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.analytics.AnalyticsListener
 import com.frogobox.research.R
 import com.frogobox.research.databinding.ActivityWatchBinding
+import com.frogobox.research.util.setJwp
 import com.frogobox.research.util.setMediaItemsExt
 
 class WatchActivity : AppCompatActivity() {
@@ -56,7 +57,8 @@ class WatchActivity : AppCompatActivity() {
 
     private fun mediaVideo(): MutableList<String> {
         val data = mutableListOf<String>()
-        data.add(getString(R.string.media_url_jwp))
+        data.add(getString(R.string.media_url_jwp_1))
+        data.add(getString(R.string.media_url_jwp_2))
         data.add(getString(R.string.media_url_mp4))
         data.add(getString(R.string.media_url_mp3))
         data.add(getString(R.string.media_url_mp4_from_youtube_1))
@@ -126,7 +128,7 @@ class WatchActivity : AppCompatActivity() {
                 // exoPlayer.setMediaItemExt(getString(R.string.media_url_mp4))
 
                 // Setup Media Multiple Video
-                exoPlayer.setMediaItemsExt(mediaVideo())
+                exoPlayer.setJwp(getString(R.string.media_url_jwp_2))
 
                 // Setup Media Single Video Youtube Url
                 // exoPlayer.setMediaItemExtYT(getString(R.string.media_url_dash))
