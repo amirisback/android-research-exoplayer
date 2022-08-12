@@ -7,6 +7,7 @@ import androidx.media3.datasource.DataSource
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.hls.HlsMediaSource
+import androidx.media3.exoplayer.source.MediaSource
 
 
 /**
@@ -59,7 +60,7 @@ fun ExoPlayer.setMediaItemsExt(uriMedia: List<String>, position: Int) {
 
 }
 
-fun ExoPlayer.setJwp(uriMedia: String) {
+fun ExoPlayer.setMediaSourceExt(uriMedia: String) {
 
     // Create a data source factory.
     val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
@@ -70,5 +71,43 @@ fun ExoPlayer.setJwp(uriMedia: String) {
 
     // Create a player instance.
     setMediaSource(hlsMediaSource)
+
+}
+
+fun ExoPlayer.setMediaSourcesExt(uriMedia: List<String>) {
+
+    // Create a data source factory.
+    val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
+
+    // Create a HLS media source pointing to a playlist uri.
+    val mediaSources = mutableListOf<MediaSource>()
+
+    uriMedia.forEach {
+        mediaSources.add(
+            HlsMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(it))
+        )
+    }
+
+    // Create a player instance.
+    setMediaSources(mediaSources)
+
+}
+
+fun ExoPlayer.setMediaSourcesExt(uriMedia: List<String>, position: Int) {
+
+    // Create a data source factory.
+    val dataSourceFactory: DataSource.Factory = DefaultHttpDataSource.Factory()
+
+    // Create a HLS media source pointing to a playlist uri.
+    val mediaSources = mutableListOf<MediaSource>()
+
+    uriMedia.forEach {
+        mediaSources.add(
+            HlsMediaSource.Factory(dataSourceFactory).createMediaSource(MediaItem.fromUri(it))
+        )
+    }
+
+    // Create a player instance.
+    setMediaSources(mediaSources, position, 0L)
 
 }
